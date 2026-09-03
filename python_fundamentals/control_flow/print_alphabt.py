@@ -7,4 +7,4 @@ for lettre in alphabet:
     if lettre != "q" and lettre != "e":
         result += lettre
 
-print("{}".format(result))
+print("{}".format(result), end="")
