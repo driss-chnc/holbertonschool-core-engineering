@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from variable_load_5 import a  # type: ignore[import-not-found]
+from variable_load_5 import a
 
 
 if __name__ == "__main__":
-    print(a)
+    print("{}".format(a))
