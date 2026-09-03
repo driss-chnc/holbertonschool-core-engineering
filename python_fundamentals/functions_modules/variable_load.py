@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from variable_load_5 import a
+from variable_load_5 import a # type: ignore
 
 
 if __name__ == "__main__":
