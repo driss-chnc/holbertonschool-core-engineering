@@ -1,4 +1,4 @@
-<<<<<<< SEARCH
+SEARCH
 =======
 # Control flow: positive or negative
 
