@@ -1,28 +1,16 @@
 #!/usr/bin/env python3
-"""Defines a Square class."""
+"""Defines a Rectangle class."""
 
 
-class Square:
-    """Represents a square."""
+BaseGeometry = __import__('0-base_geometry').BaseGeometry
 
-    def __init__(self, size=0):
-        """Initialize a square with a size."""
-        self.size = size
 
-    @property
-    def size(self):
-        """Return the size of the square."""
-        return self.__size
+class Rectangle(BaseGeometry):
+    """Represents a rectangle."""
 
-    @size.setter
-    def size(self, value):
-        """Set the size of the square."""
-        if not isinstance(value, int):
-            raise TypeError("size must be an integer")
-        if value < 0:
-            raise ValueError("size must be >= 0")
-        self.__size = value
-
-    def area(self):
-        """Return the current square area."""
-        return self.__size * self.__size
+    def __init__(self, width, height):
+        """Initialize a rectangle with width and height."""
+        self.integer_validator("width", width)
+        self.integer_validator("height", height)
+        self.__width = width
+        self.__height = height
