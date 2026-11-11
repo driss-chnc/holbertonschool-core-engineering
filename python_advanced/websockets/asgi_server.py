@@ -1,38 +1,28 @@
 #!/usr/bin/env python3
-"""WebSocket server that broadcasts every message to all clients."""
-import asyncio
-
-from websockets.asyncio.server import serve
-from websockets.exceptions import ConnectionClosed
-
-connected_clients = set()
+"""ASGI application (Starlette) with an HTTP page and a WebSocket echo."""
+from starlette.applications import Starlette
+from starlette.responses import HTMLResponse
+from starlette.routing import Route, WebSocketRoute
+from starlette.websockets import WebSocketDisconnect
 
 
-async def broadcast(message):
-    """Send 'B:' + message to every connected client."""
-    for client in list(connected_clients):
-        try:
-            await client.send(f"B:{message}")
-        except ConnectionClosed:
-            connected_clients.discard(client)
+async def homepage(request):
+    """Return the HTML page."""
+    return HTMLResponse("<h1>WebSocket Echo</h1>")
 
 
-async def connection_handler(websocket):
-    """Track the client and broadcast each message it sends."""
-    connected_clients.add(websocket)
+async def websocket_endpoint(websocket):
+    """Echo every text message back to the sender."""
+    await websocket.accept()
     try:
-        async for message in websocket:
-            await broadcast(message)
-    except ConnectionClosed:
+        while True:
+            message = await websocket.receive_text()
+            await websocket.send_text(message)
+    except WebSocketDisconnect:
         pass
-    finally:
-        connected_clients.discard(websocket)
 
 
-async def main():
-    async with serve(connection_handler, "127.0.0.1", 8765) as server:
-        await server.serve_forever()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+app = Starlette(routes=[
+    Route("/", homepage),
+    WebSocketRoute("/ws", websocket_endpoint),
+])
