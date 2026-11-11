@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""ASGI application (Starlette) with an HTTP page and a WebSocket echo."""
+"""ASGI application (Starlette) with an HTML page and a WebSocket echo."""
+from pathlib import Path
+
 from starlette.applications import Starlette
 from starlette.responses import HTMLResponse
-from starlette.routing import Route, WebSocketRoute
+from starlette.routing import Mount, Route, WebSocketRoute
+from starlette.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
+
+STATIC_DIR = Path(__file__).parent / "static"
 
 
 async def homepage(request):
@@ -25,4 +30,6 @@ async def websocket_endpoint(websocket):
 app = Starlette(routes=[
     Route("/", homepage),
     WebSocketRoute("/ws", websocket_endpoint),
+    Mount("/static", app=StaticFiles(directory=STATIC_DIR, html=True),
+          name="static"),
 ])
